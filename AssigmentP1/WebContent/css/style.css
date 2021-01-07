@@ -1,0 +1,15 @@
+@charset "ISO-8859-1";
+body {
+  background-color: #80ffff;
+}
+h1 {
+  color: blue;
+}
+
+button {
+  background-color: #008000; 
+  color: white;
+  padding:32px;
+  text-align: center;
+  font-size: 10px;  
+}
