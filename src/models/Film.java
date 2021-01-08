@@ -1,6 +1,11 @@
 package models;
 
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlRootElement(name = "film")
+@XmlType(propOrder = { "id", "title", "year", "director", "stars", "review" })
 public class Film {
    public Film(int id, String title, int year, String director, String stars,
 			String review) {

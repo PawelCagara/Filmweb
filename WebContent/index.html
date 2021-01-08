@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" type="text/css" href="css/style.css">
 <head>
 <meta charset="ISO-8859-1">
+
 <title>Assignment part 1</title>
 </head>
 <body>
 
-	<h1>Welcome</h1>
+	<h1>Welcome to our Film Database</h1>
 	<form method="post" action="./home">
 		<table>
 			<input type="text" placeholder="Search for film" name="searchValue">
@@ -16,6 +18,7 @@
 		<input type="radio" id="byName" name="searchType" value="byName"
 			checked> <label for="byName">Search by name</label><br>
 		<input type="radio" id="byID" name="searchType" value="byID">
+		
 		<label for="byID">Search by ID</label><br> <label
 			for="data-format">Select format type:</label> <select
 			name="data-format" id="data-format">
@@ -23,23 +26,21 @@
 			<option value="XML">XML</option>
 			<option value="Text">Text</option>
 		</select> <br>
+		
+		<button id="getAllFilms" value = "getAllFilms" name = "searchType">Get all films</button>
 
-	</form>
-
-	<form action='./AllFilmsServlet'>
-		<button>Get all films</button>
 	</form>
 	<table>
 		<form action="addFilmToDB.html">
-			<input type="submit" value="Add film">
+			<button>Add film</button>
 		</form>
 
 		<form action="deleteFilmFromDB.html">
-			<input type="submit" value="Delete film">
+			<button>Delete film</button>
 		</form>
 
 		<form action="updateFilm.html">
-			<input type="submit" value="Update film">
+			<button>Update film</button>
 		</form>
 	</table>
 

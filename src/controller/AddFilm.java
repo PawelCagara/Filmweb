@@ -39,63 +39,46 @@ public class AddFilm extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
-		FilmDAO dao = new FilmDAO();
+		//FilmDAO dao = new FilmDAO();
+		FilmDAO dao = FilmDAO.getSingletonObject();
 		ArrayList<Film> allFilms = dao.getAllFilms();
 		
 		
 		PrintWriter pw;    
         response.setContentType("text/html");    
         pw=response.getWriter();  
-		
-		 try    
-	        {
-		 String user = "cagarap";
-         String password = "yestErla7";            
-         String url = "jdbc:mysql://mudfoot.doc.stu.mmu.ac.uk:6306/"+user;             
-         Connection con = DriverManager.getConnection(url, user, password); 
-        Statement stmt = con.createStatement();
-       
-        ResultSet rs = stmt.executeQuery("select max(id) from films");
-        rs.next();
-        //searching through DB for max ID then adding 1 to create next ID
-        int id = rs.getInt(1)+1;
         
+        String title = request.getParameter("title");
 		
-		String title = request.getParameter("title");
-		int year = Integer.parseInt(request.getParameter("year"));
 		String director = request.getParameter("director");
 		String stars = request.getParameter("stars");
 		String review = request.getParameter("review");
 		
-		
-		  
- 
-           
-           
+		try {
+			int year = Integer.parseInt(request.getParameter("year"));
+		try {
+			String user = "cagarap";
+			String password = "yestErla7";
+			String url = "jdbc:mysql://mudfoot.doc.stu.mmu.ac.uk:6306/" + user;
+			Connection con = DriverManager.getConnection(url, user, password);
+			Statement stmt = con.createStatement();
 
-              
-            String query = "Insert into films(id,title,year,director,stars,review) values (?,?,?,?,?,?);";    
-            PreparedStatement pstmt=con.prepareStatement(query);    
-            pstmt.setInt(1, id);    
-            pstmt.setString(2, title);    
-            pstmt.setInt(3,year);    
-            pstmt.setString(4, director);    
-            pstmt.setString(5, stars);    
-            pstmt.setString(6,review);    
-                
-            int checker=pstmt.executeUpdate();    
-                
-            if(checker==1) {   
-            pw.println("Film with ID "+id +" added sucessfuly to DB ");
-            pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
-            }    
-                
-        }    
-        catch(Exception e)    
-        {    
-                e.printStackTrace();    
-        }    
-            
+			ResultSet rs = stmt.executeQuery("select max(id) from films");
+			rs.next();
+			// searching through DB for max ID then adding 1 to create next ID
+			int id = rs.getInt(1) + 1;
+			dao.addFilm(id, title, year, director, stars, review);
+
+			pw.println("Film with ID " + id + " added sucessfuly to DB ");
+			pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		} catch(NumberFormatException ex) {
+			pw.println("Insert failed: year is in numbers format for example '2005'");
+			pw.print("<br><a href=\"addFilmToDB.html\"><button type=\"button\">Insert again</button></a>");
+		}
             
         pw.close();    
     }  

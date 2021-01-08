@@ -5,12 +5,16 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import dataBase.FilmDAO;
+import models.Film;
 
 /**
  * Servlet implementation class DeleteFilm
@@ -32,50 +36,46 @@ public class DeleteFilm extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int id = Integer.valueOf(request.getParameter("id"));
+		
+		FilmDAO dao = FilmDAO.getSingletonObject();
+		
 		
 		PrintWriter pw;    
         response.setContentType("text/html");    
-        pw=response.getWriter();    
+        pw=response.getWriter();  
+		
+		
+		try {
+		int id = Integer.valueOf(request.getParameter("id"));
+		
+		  
  
-        try    
-        {    
-            Class.forName("com.mysql.jdbc.Driver");    
-
-            String user = "cagarap";
-            String password = "yestErla7";            
-            String url = "jdbc:mysql://mudfoot.doc.stu.mmu.ac.uk:6306/"+user;
-                
-            Connection con = DriverManager.getConnection(url, user, password);    
-           
-            String query = "delete from films where id=?;";
-            PreparedStatement pstmt=con.prepareStatement(query);    
-                
-           
-            pstmt.setInt(1, id);
-                
-            int checker=pstmt.executeUpdate();    
-                
-            if(checker==1) {   
-            pw.println("Film with ID "+id +" deleted sucessfuly");
+       try {
+		dao.deleteFilm(id);
+		//checking if film is still in DB
+		if(dao.getFilmByID(id)==null) {
+			pw.println("Film with ID "+id +" deleted sucessfuly");
             pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
             }
             else {
-            	pw.println("Delete failed, check if you are using correct ID");
+            	pw.println("Delete failed");
             	pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
             }
-                
-        }    
-        catch(Exception e)    
-        {    
-                e.printStackTrace();    
-        }    
-            
-            
-        pw.close();  
 		
 		
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+			
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		} catch(NumberFormatException ex) {
+			pw.println("ID is in numbers format for example '10004'");
+        	pw.print("<br><a href=\"deleteFilmFromDB.html\"><button type=\"button\">Delete again</button></a>");
+		}
+       
+		pw.close();
+    
 	}
 
 	/**

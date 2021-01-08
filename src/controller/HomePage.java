@@ -10,11 +10,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import com.google.gson.Gson;
 
 import dataBase.FilmDAO;
 import models.Film;
+import models.Filmstore;
 
 /**
  * Servlet implementation class HomePage
@@ -43,12 +47,12 @@ public class HomePage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		FilmDAO filmDAO = new FilmDAO();
+		FilmDAO filmDAO = FilmDAO.getSingletonObject();
 		ArrayList<Film> allFilms = filmDAO.getAllFilms();
 		String data = "";
 		String address = "";
 		int id = 0;
-		String filmName = "";
+		
 
 		if (format.equals("Json")) {
 			Gson gson = new Gson();
@@ -76,34 +80,72 @@ public class HomePage extends HttpServlet {
 				address = "home";
 			}
 
-			
-
 		} else if (format.equals("XML")) {
 
-			data = "XML FORMAT";
-			address = "home";
-		} else {
-			if(searchType.equals("byID")){
+			PrintWriter pw;
+			response.setContentType("text/xml");
+			pw = response.getWriter();
+			Filmstore bookstore = new Filmstore();
+
+			if (searchType.equals("byID")) {
 				try {
 					id = Integer.valueOf(searchValue);
 					Film film = filmDAO.getFilmByID(id);
+					bookstore.setFilmById(film);
+
+					JAXBContext context = JAXBContext.newInstance(Filmstore.class);
+					Marshaller m = context.createMarshaller();
+					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+					m.marshal(bookstore, pw);
+				} catch (NumberFormatException ex) {
+					data = "ID is in numbers format for example '10004'";
+					address = "home";
+				} catch (JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} else if (searchType.equals("byName")) {
+				ArrayList<Film> film = filmDAO.getFilmByName(searchValue);
+				bookstore.setFilmsList(film);
+				try {
+					JAXBContext context = JAXBContext.newInstance(Filmstore.class);
+					Marshaller m = context.createMarshaller();
+					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+					m.marshal(bookstore, pw);
+				} catch (JAXBException e) {
+					e.printStackTrace();
+				}
+
+			}
+
+		} else {
+			if (searchType.equals("byID")) {
+				try {
+					id = Integer.valueOf(searchValue);
+					Film film = filmDAO.getFilmByID(id);
+					if (film!=null){
 					data = film.toString();
 					address = "home";
+					} else {
+						data = "Film with id="+id+"doesn't exist";
+						address = "home";
+					}
+					
 				} catch (NumberFormatException ex) {
 					data = "ID is in numbers format for example '10004'";
 					address = "home";
 				}
-			}
-			else if(searchType.equals("byName")) {
+			} else if (searchType.equals("byName")) {
 				ArrayList<Film> film = filmDAO.getFilmByName(searchValue);
 				data = film.toString();
 				address = "home";
+				
 			}
 		}
-		// PrintWriter print = response.getWriter();
-		// print.write(filmsJson);
-		// print.close();
-		//response.setContentType("application/json");
+
 		request.setAttribute("jsonAllFilms", data);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/" + address + ".jsp");
 		dispatcher.forward(request, response);

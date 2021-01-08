@@ -1,7 +1,5 @@
 package dataBase;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import models.Film;
@@ -19,7 +17,16 @@ public class FilmDAO {
     // Note none default port used, 6306 not 3306
     String url = "jdbc:mysql://mudfoot.doc.stu.mmu.ac.uk:6306/"+user;
 
-	public FilmDAO() {}
+    private static FilmDAO singletonFilmDAO;
+    
+	private FilmDAO() {}
+	
+	public static synchronized FilmDAO getSingletonObject() {
+		if (singletonFilmDAO == null) {
+			singletonFilmDAO = new FilmDAO();
+		}
+		return singletonFilmDAO;
+	}
 
 	
 	private void openConnection(){
@@ -124,6 +131,33 @@ public class FilmDAO {
 	   
 	   return filmsByName;
    }
+   
+  public void deleteFilm(int id) throws SQLException {
+	  openConnection(); 
+	  String query = "delete from films where id="+id;         
+	  stmt.executeUpdate(query);
+	     stmt.close();     
+	  closeConnection();          
+  }
+  
+  public void updateFilm(int id, String title, int year, String director, String stars,
+			String review) throws SQLException {
+	  openConnection();
+	  String query = "Update films set title= '" + title + "',year= '" + year + "',director= '" + director + "'"
+	  		+ ",stars= '" + stars + "', review= '" + review + "' where id="+id;
+	  stmt.executeUpdate(query);
+	     stmt.close();     
+	  closeConnection();
+  }
+  
+  public void addFilm(int id, String title, int year, String director, String stars,
+			String review) throws SQLException {
+	  openConnection(); 
+	  String query = "insert into films values ('"+id+"', '"+title+"', '"+year+"', '"+director+"', '"+stars+"', '"+review+"')";
+      stmt.executeUpdate(query);
+	     stmt.close();     
+	  closeConnection();	  
+  }
   
 
    
