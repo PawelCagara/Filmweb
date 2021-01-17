@@ -41,41 +41,39 @@ public class AddFilm extends HttpServlet {
 		
 		//FilmDAO dao = new FilmDAO();
 		FilmDAO dao = FilmDAO.getSingletonObject();
-		ArrayList<Film> allFilms = dao.getAllFilms();
-		
+				
 		
 		PrintWriter pw;    
         response.setContentType("text/html");    
         pw=response.getWriter();  
         
-        String title = request.getParameter("title");
-		
+        String title = request.getParameter("title");		
 		String director = request.getParameter("director");
 		String stars = request.getParameter("stars");
 		String review = request.getParameter("review");
-		
+		//making sure user is using year as integer
 		try {
 			int year = Integer.parseInt(request.getParameter("year"));
-		try {
-			String user = "cagarap";
-			String password = "yestErla7";
-			String url = "jdbc:mysql://mudfoot.doc.stu.mmu.ac.uk:6306/" + user;
-			Connection con = DriverManager.getConnection(url, user, password);
-			Statement stmt = con.createStatement();
+			try {
+				String user = "cagarap";
+				String password = "yestErla7";
+				String url = "jdbc:mysql://mudfoot.doc.stu.mmu.ac.uk:6306/" + user;
+				Connection con = DriverManager.getConnection(url, user, password);
+				Statement stmt = con.createStatement();
 
-			ResultSet rs = stmt.executeQuery("select max(id) from films");
-			rs.next();
-			// searching through DB for max ID then adding 1 to create next ID
-			int id = rs.getInt(1) + 1;
-			dao.addFilm(id, title, year, director, stars, review);
+				ResultSet rs = stmt.executeQuery("select max(id) from films");
+				rs.next();
+				// searching through DB for max ID then adding 1 to create next ID
+				int id = rs.getInt(1) + 1;
+				dao.addFilm(id, title, year, director, stars, review);
 
-			pw.println("Film with ID " + id + " added sucessfuly to DB ");
-			pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
+				pw.println("Film with ID " + id + " added sucessfuly to DB ");
+				pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		} catch(NumberFormatException ex) {
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (NumberFormatException ex) {
 			pw.println("Insert failed: year is in numbers format for example '2005'");
 			pw.print("<br><a href=\"addFilmToDB.html\"><button type=\"button\">Insert again</button></a>");
 		}

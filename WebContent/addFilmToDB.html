@@ -1,37 +1,43 @@
 
     <!DOCTYPE html>  
     <html> 
-    <link rel="stylesheet" type="text/css" href="css/style.css"> 
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <head>  
             <meta charset="ISO-8859-1">  
             <title>Add new film to DB</title>  
         </head>  
         <body>  
-        	<h1>You can add movie to Database here</h1>
-            <form method="Post" action="./addFilm">                  
-                <div>  
-                    <label>Enter Movie Title: </label>     
-                    <input type="text" name="title">  
-                </div>  
-                <div>  
-                    <label>Enter Release Date: </label>  
-                    <input type="text" name="year">    
-                </div>  
-                <div>  
-                    <label>Enter Director Name: </label>      
-                    <input type="text" name="director">  
-                </div>  
-                <div>  
-                    <label>Enter Stars Names: </label>   
-                    <input type="text" name="stars">  
-                </div>  
-                <div>  
-                    <label>Enter Review: </label>  
-                    <input type="text" name="review">     
-                </div>  
-                <div>  
-                    <input type="submit" value="Add film">  
-                </div>  
-            </form>  
+        	<h1 style="text-align:center;">You can add movie to Database here</h1>
+     <form method="Post" action="./addFilm">    
+     <div class="form-group">
+      <label >Title:</label>
+      <input type="text" class="form-control"  placeholder="Enter title" name="title">
+    </div>
+   <div class="form-group">
+      <label >Year:</label>
+      <input type="text" class="form-control"  placeholder="Enter year of production" name="year">
+    </div>
+    <div class="form-group">
+      <label >Director:</label>
+      <input type="text" class="form-control"  placeholder="Enter director name" name="director">
+    </div>
+    <div class="form-group">
+      <label >Stars:</label>
+      <input type="text" class="form-control"  placeholder="Enter stars names" name="stars">
+    </div>
+    <div class="form-group">
+      <label >Review:</label>
+      <input type="text" class="form-control"  placeholder="Enter your review" name="review">
+    </div>
+  
+    <button type="submit" class="btn btn-default">Add film</button>
+  </form>
+</div>
+	
         </body>  
     </html>  

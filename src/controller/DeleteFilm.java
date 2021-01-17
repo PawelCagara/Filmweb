@@ -2,9 +2,6 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -14,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dataBase.FilmDAO;
-import models.Film;
+
 
 /**
  * Servlet implementation class DeleteFilm
@@ -34,48 +31,47 @@ public class DeleteFilm extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+
 		FilmDAO dao = FilmDAO.getSingletonObject();
-		
-		
-		PrintWriter pw;    
-        response.setContentType("text/html");    
-        pw=response.getWriter();  
-		
-		
+
+		PrintWriter pw;
+		response.setContentType("text/html");
+		pw = response.getWriter();
+		// making sure user is using int for ID
 		try {
-		int id = Integer.valueOf(request.getParameter("id"));
-		
-		  
- 
-       try {
-		dao.deleteFilm(id);
-		//checking if film is still in DB
-		if(dao.getFilmByID(id)==null) {
-			pw.println("Film with ID "+id +" deleted sucessfuly");
-            pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
-            }
-            else {
-            	pw.println("Delete failed");
-            	pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
-            }
-		
-		
-			
-		
-	} catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-		} catch(NumberFormatException ex) {
+			int id = Integer.valueOf(request.getParameter("id"));
+
+			try {
+				// checking if film with required ID exist in DB
+				if (dao.getFilmByID(id) == null) {
+					pw.println("Can't find film with ID " + id + " check if you are using correct ID");
+				} else {
+
+					dao.deleteFilm(id);
+					// checking if film is still in DB
+					if (dao.getFilmByID(id) == null) {
+						pw.println("Film with ID " + id + " deleted sucessfuly");
+						pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
+					} else {
+						pw.println("Delete failed");
+						pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
+					}
+
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (NumberFormatException ex) {
 			pw.println("ID is in numbers format for example '10004'");
-        	pw.print("<br><a href=\"deleteFilmFromDB.html\"><button type=\"button\">Delete again</button></a>");
+			pw.print("<br><a href=\"deleteFilmFromDB.html\"><button type=\"button\">Delete again</button></a>");
 		}
-       
+
 		pw.close();
-    
+
 	}
 
 	/**

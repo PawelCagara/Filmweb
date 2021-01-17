@@ -14,7 +14,7 @@ public class FilmDAO {
     Statement stmt = null;
 	String user = "cagarap";
     String password = "yestErla7";
-    // Note none default port used, 6306 not 3306
+    
     String url = "jdbc:mysql://mudfoot.doc.stu.mmu.ac.uk:6306/"+user;
 
     private static FilmDAO singletonFilmDAO;

@@ -52,8 +52,7 @@ public class HomePage extends HttpServlet {
 		String data = "";
 		String address = "";
 		int id = 0;
-		
-
+		//part for JSON
 		if (format.equals("Json")) {
 			Gson gson = new Gson();
 
@@ -67,7 +66,6 @@ public class HomePage extends HttpServlet {
 					data = "ID is in numbers format for example '10004'";
 					address = "home";
 				}
-
 			}
 
 			else if (searchType.equals("byName")) {
@@ -75,13 +73,12 @@ public class HomePage extends HttpServlet {
 				ArrayList<Film> film = filmDAO.getFilmByName(searchValue);
 				data = gson.toJson(film);
 				address = "home";
-			} else if (getAllFilms.equals("getAllFilms")) {
+			} else if (searchType.equals("getAllFilms")) {
 				data = gson.toJson(allFilms);
 				address = "home";
 			}
-
+			//Part for dealing with XML
 		} else if (format.equals("XML")) {
-
 			PrintWriter pw;
 			response.setContentType("text/xml");
 			pw = response.getWriter();
@@ -113,27 +110,26 @@ public class HomePage extends HttpServlet {
 					JAXBContext context = JAXBContext.newInstance(Filmstore.class);
 					Marshaller m = context.createMarshaller();
 					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
 					m.marshal(bookstore, pw);
 				} catch (JAXBException e) {
 					e.printStackTrace();
 				}
 
 			}
-
+			//part dealing with Text format
 		} else {
 			if (searchType.equals("byID")) {
 				try {
 					id = Integer.valueOf(searchValue);
 					Film film = filmDAO.getFilmByID(id);
-					if (film!=null){
-					data = film.toString();
-					address = "home";
+					if (film != null) {
+						data = film.toString();
+						address = "home";
 					} else {
-						data = "Film with id="+id+"doesn't exist";
+						data = "Film with id=" + id + "doesn't exist";
 						address = "home";
 					}
-					
+
 				} catch (NumberFormatException ex) {
 					data = "ID is in numbers format for example '10004'";
 					address = "home";
@@ -142,11 +138,10 @@ public class HomePage extends HttpServlet {
 				ArrayList<Film> film = filmDAO.getFilmByName(searchValue);
 				data = film.toString();
 				address = "home";
-				
 			}
 		}
 
-		request.setAttribute("jsonAllFilms", data);
+		request.setAttribute("data", data);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("jsp/" + address + ".jsp");
 		dispatcher.forward(request, response);
 

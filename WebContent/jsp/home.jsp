@@ -2,4 +2,4 @@
     pageEncoding="ISO-8859-1"%>
 
 
-${jsonAllFilms}
+${data}

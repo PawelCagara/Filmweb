@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <head>
 <meta charset="ISO-8859-1">
 
@@ -8,11 +11,12 @@
 </head>
 <body>
 
-	<h1>Welcome to our Film Database</h1>
+	<h1 style="text-align: center; background-color:powderblue;">Welcome to our Film Database</h1>
+	<div style="text-align: center;background-color:lightblue;">
 	<form method="post" action="./home">
 		<table>
 			<input type="text" placeholder="Search for film" name="searchValue">
-			<input type="submit">
+			  <button type="submit" class="btn btn-dark">Submit</button>
 		</table>
 
 		<input type="radio" id="byName" name="searchType" value="byName"
@@ -27,25 +31,27 @@
 			<option value="Text">Text</option>
 		</select> <br>
 		
-		<button id="getAllFilms" value = "getAllFilms" name = "searchType">Get all films</button>
+		<button type ="submit" class="btn btn-info" id="getAllFilms" value = "getAllFilms" name = "searchType">Get all films</button>
 
 	</form>
 	<table>
 		<form action="addFilmToDB.html">
-			<button>Add film</button>
+			<button type="submit" class="btn btn-primary">Add film</button>
 		</form>
 
 		<form action="deleteFilmFromDB.html">
-			<button>Delete film</button>
+			<button type="submit" class="btn btn-primary">Delete film</button>
 		</form>
 
 		<form action="updateFilm.html">
-			<button>Update film</button>
+			<button type="submit" class="btn btn-primary">Update film</button>
 		</form>
 	</table>
-
+</div>
 
 
 
 </body>
 </html>
+
+

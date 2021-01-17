@@ -2,12 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dataBase.FilmDAO;
-import models.Film;
 
 /**
  * Servlet implementation class UpdateFilm
@@ -43,7 +37,6 @@ public class UpdateFilm extends HttpServlet {
 		FilmDAO dao = FilmDAO.getSingletonObject();
 
 		String title = request.getParameter("title");
-
 		String director = request.getParameter("director");
 		String stars = request.getParameter("stars");
 		String review = request.getParameter("review");
@@ -51,7 +44,7 @@ public class UpdateFilm extends HttpServlet {
 		PrintWriter pw;
 		response.setContentType("text/html");
 		pw = response.getWriter();
-
+		//making sure that user is using correct format for ID/YEAR
 		try {
 			int year = Integer.parseInt(request.getParameter("year"));
 			try {
@@ -59,6 +52,14 @@ public class UpdateFilm extends HttpServlet {
 
 				try {
 					dao.updateFilm(id, title, year, director, stars, review);
+					//checking if user used ID which exist in DB
+					if (dao.getFilmByID(id) == null) {
+						pw.println("Film with ID " + id + " doesn't exist");
+						pw.print("<br><a href=\"updateFilm.html\"><button type=\"button\">Update again</button></a>");
+					} else {
+						pw.println("Update successful");
+						pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
+					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -72,8 +73,7 @@ public class UpdateFilm extends HttpServlet {
 			pw.print("<br><a href=\"updateFilm.html\"><button type=\"button\">Update again</button></a>");
 		}
 
-		pw.println("Update failed, check if you are using correct ID");
-		pw.print("<br><a href=\"index.html\"><button type=\"button\">Home page</button></a>");
+		
 
 		pw.close();
 	}
